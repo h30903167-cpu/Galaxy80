@@ -1,0 +1,6 @@
+{
+  "name": "Galaxy Seeder",
+  "description": "Galaxy Manual Seeder GL-12 agricultural equipment platform with secure recharge up to 1 Lakh, equipment activation, daily income, withdrawals with video proof, and 24/7 dedicated service.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

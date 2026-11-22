@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Galaxy Manual Seeder (GL-12)</title>
+  <style>
+    :root {
+      --bg: #0b1713;
+      --bg-header: #0f2624;
+      --card: #132620;
+      --card-dark: #101b1a;
+      --surface: #193129;
+      --border: #1f3e34;
+      --primary: #00e676;
+      --teal: #00d2c4;
+      --on-primary: #021b10;
+      --gold: #ffd600;
+      --red: #ff5252;
+      --text: #ffffff;
+      --text-sec: #8daea4;
+      --text-muted: #5b786e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: #060e0b;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 460px;
+      min-height: 100vh;
+      background: var(--bg);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.7);
+    }
+
+    .hidden { display: none !important; }
+
+    /* Header */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--bg-header);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar-teal {
+      background: var(--teal);
+      color: #041c1a;
+    }
+
+    .back-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: inherit;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .topbar h1 {
+      font-size: 18px;
+      font-weight: 700;
+      flex: 1;
+    }
+
+    .content {
+      flex: 1;
+      padding: 14px 16px 88px;
+      overflow-y: auto;
+    }
+
+    /* Cards & Buttons */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .btn {
+      width: 100%;
+      min-height: 48px;
+      border: none;
+      border-radius: 24px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      transition: opacity 0.15s;
+    }
+
+    .btn:active { opacity: 0.85; }
+    .btn-primary { background: var(--primary); color: var(--on-primary); }
+    .btn-teal { background: var(--teal); color: #041c1a; }
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    .btn-locked {
+      background: #1e2d2a;
+      color: #ffcdd2;
+      border: 1px solid rgba(255, 82, 82, 0.35);
+    }
+    .btn-danger {
+      background: #261919;
+      color: var(--red);
+      border: 1px solid rgba(255, 82, 82, 0.45);
+    }
+    .btn-sm {
+      width: auto;
+      min-height: 36px;
+      font-size: 12px;
+      padding: 6px 14px;
+      border-radius: 18px;
+    }
+
+    /* Inputs */
+    .field { margin-bottom: 12px; }
+    .field label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-sec);
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .input {
+      width: 100%;
+      background: #142423;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: #fff;
+      padding: 12px 14px;
+      font-size: 14px;
+      outline: none;
+    }
+    .input:focus { border-color: var(--primary); }
+
+    /* Auth Screen (Screenshot Match) */
+    .content.auth-mode {
+      padding: 0 0 36px;
+      background: linear-gradient(180deg, #00d2c4 0%, #0b2b26 52%, #0b1713 100%);
+    }
+    .auth-hero-wrap {
+      position: relative;
+      width: 100%;
+      margin-bottom: 52px;
+    }
+    .auth-banner {
+      height: 195px;
+      border-radius: 0 0 24px 24px;
+      background: linear-gradient(135deg, #0d3b2e, #0c5942 45%, #07271f 100%);
+      padding: 20px 18px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(0, 230, 118, 0.25);
+    }
+    .auth-banner::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 80% 20%, rgba(0, 230, 118, 0.22), transparent 55%),
+                  radial-gradient(circle at 18% 75%, rgba(0, 210, 196, 0.2), transparent 50%);
+      pointer-events: none;
+    }
+    .auth-banner h2 {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 0.4px;
+      position: relative;
+      z-index: 1;
+    }
+    .auth-banner p {
+      font-size: 12px;
+      color: #c8e6c9;
+      margin-top: 4px;
+      position: relative;
+      z-index: 1;
+    }
+    .auth-circle-logo {
+      position: absolute;
+      left: 50%;
+      bottom: -44px;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #0c3326, #071912);
+      border: 3px solid var(--primary);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+      color: #fff;
+      font-weight: 900;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
+    .auth-circle-logo span.sub {
+      font-size: 9px;
+      color: var(--primary);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+    .auth-card {
+      background: #13191c;
+      border-radius: 20px;
+      padding: 22px 20px 24px;
+      margin: 0 18px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+    .auth-tabs {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    .auth-tab {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-sec);
+      font-size: 18px;
+      font-weight: 600;
+      padding: 8px 0 10px;
+      cursor: pointer;
+      position: relative;
+    }
+    .auth-tab.active {
+      color: #fff;
+      font-weight: 800;
+    }
+    .auth-tab.active::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 56px;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--primary);
+    }
+    .phone-box {
+      display: flex;
+      align-items: center;
+      background: #1e2427;
+      border: 1px solid #2b353a;
+      border-radius: 8px;
+      padding: 0 12px;
+      height: 50px;
+      margin-bottom: 14px;
+    }
+    .phone-box:focus-within { border-color: var(--primary); }
+    .phone-prefix {
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      padding-right: 12px;
+      margin-right: 12px;
+      border-right: 1px solid #3a474d;
+      white-space: nowrap;
+    }
+    .phone-box input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      min-width: 0;
+    }
+    .underline-row {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #2b353a;
+      padding: 4px 0;
+      margin-bottom: 14px;
+      min-height: 46px;
+    }
+    .underline-row:focus-within { border-bottom-color: var(--primary); }
+    .underline-row input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 14px;
+      padding: 8px 4px;
+      outline: none;
+      min-width: 0;
+    }
+    .underline-row input::placeholder,
+    .phone-box input::placeholder {
+      color: #7b8b90;
+    }
+    .eye-btn {
+      background: transparent;
+      border: none;
+      color: #9eaab0;
+      font-size: 16px;
+      cursor: pointer;
+      width: 38px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .invite-prefix {
+      color: #9eaab0;
+      font-size: 16px;
+      padding: 0 8px 0 4px;
+    }
+    .agree-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #8ca5a1;
+      margin: 6px 0 18px;
+      cursor: pointer;
+    }
+    .agree-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary);
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      border-radius: 16px;
+      background: linear-gradient(135deg, #1b5e20, #0b2e24 60%, #091b16);
+      border: 1px solid rgba(0, 230, 118, 0.35);
+      padding: 18px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: var(--gold);
+      color: #000;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+    }
+    .hero-banner h2 { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .hero-banner p { font-size: 12px; color: #c8e6c9; line-height: 1.4; }
+
+    /* Wallet Strip */
+    .wallet-strip {
+      background: linear-gradient(90deg, #0f2b28, #143b37);
+      border: 1px solid rgba(0, 230, 118, 0.35);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .wallet-val { font-size: 20px; font-weight: 800; color: var(--primary); }
+
+    /* 4 Action Grid */
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .action-card {
+      background: var(--teal);
+      color: #05211e;
+      border-radius: 14px;
+      padding: 12px 4px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 12px;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .action-card span.ico { font-size: 20px; }
+
+    /* Segmented Tabs */
+    .pill-tabs {
+      display: flex;
+      background: #0f1e1d;
+      padding: 4px;
+      border-radius: 24px;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .pill-tab {
+      flex: 1;
+      height: 40px;
+      border: none;
+      border-radius: 20px;
+      background: transparent;
+      color: var(--text-sec);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .pill-tab.active {
+      background: var(--primary);
+      color: #041c1a;
+    }
+
+    /* Notice */
+    .notice {
+      background: #0f2b22;
+      border: 1px solid rgba(0, 230, 118, 0.35);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      font-size: 12px;
+      color: var(--text-sec);
+    }
+    .notice strong { color: #fff; display: block; margin-bottom: 2px; font-size: 13px; }
+
+    /* Product Cards */
+    .product-card {
+      background: var(--card-dark);
+      border: 1px solid rgba(0, 230, 118, 0.4);
+      border-radius: 18px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+    .product-card.locked {
+      background: #0d1716;
+      border-color: var(--border);
+    }
+    .product-banner {
+      height: 130px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #1b5e20, #0d2b22);
+      padding: 12px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .product-card.locked .product-banner {
+      filter: brightness(0.65);
+    }
+    .badges-top {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 6px;
+    }
+    .badge {
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .badge-live { background: var(--primary); color: #041c1a; }
+    .badge-limit { background: rgba(0, 56, 51, 0.9); color: #fff; border: 1px solid var(--primary); }
+    .badge-blocked { background: #d32f2f; color: #fff; }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .stat-tile {
+      background: #142423;
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+    .stat-tile .val { font-size: 16px; font-weight: 800; color: var(--primary); }
+    .product-card.locked .stat-tile .val { color: #88a39e; }
+    .stat-tile .lbl { font-size: 11px; color: var(--text-sec); }
+
+    /* Presets & Payment Cards */
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .preset-btn {
+      padding: 12px 6px;
+      border-radius: 12px;
+      background: #142423;
+      border: 1px solid var(--border);
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .preset-btn.active {
+      background: rgba(0, 230, 118, 0.16);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .preset-1lakh {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #142423;
+      border: 1px solid rgba(255, 214, 0, 0.5);
+      color: var(--gold);
+      font-weight: 800;
+      font-size: 15px;
+      text-align: left;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    .preset-1lakh.active {
+      background: #2e2606;
+      border-width: 2px;
+    }
+
+    .method-card {
+      background: #142423;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .method-card.active {
+      border-color: var(--primary);
+      background: #142b24;
+    }
+
+    .upi-box {
+      background: #182d2b;
+      border: 1px solid rgba(0, 230, 118, 0.45);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .upi-apps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin: 8px 0 12px;
+    }
+    .upi-app-btn {
+      background: transparent;
+      border: 1px solid rgba(0, 230, 118, 0.5);
+      color: #fff;
+      border-radius: 8px;
+      padding: 8px 4px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Bottom Nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 460px;
+      background: #0c1918;
+      border-top: 1px solid var(--border);
+      display: flex;
+      z-index: 30;
+    }
+    .nav-item {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text-sec);
+      padding: 8px 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+    .nav-item.active { color: var(--primary); }
+    .nav-item span.ico { font-size: 18px; }
+
+    /* Chat */
+    .chat-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .bubble {
+      max-width: 85%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .bubble.bot {
+      align-self: flex-start;
+      background: #162625;
+      border: 1px solid var(--border);
+    }
+    .bubble.user {
+      align-self: flex-end;
+      background: var(--primary);
+      color: #041c1a;
+      font-weight: 600;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 84px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f382c;
+      border: 1px solid var(--primary);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 100;
+      max-width: 90%;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+    .modal {
+      width: 100%;
+      max-width: 390px;
+      background: #132221;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+    }
+    .modal h3 { margin-bottom: 8px; font-size: 17px; }
+    .modal p { font-size: 13px; color: var(--text-sec); margin-bottom: 12px; line-height: 1.45; }
+
+    .row-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <div id="topbar" class="topbar hidden">
+    <button id="backBtn" class="back-btn hidden" onclick="navigate('home')">←</button>
+    <h1 id="topbarTitle">Galaxy Seeder</h1>
+  </div>
+
+  <main id="screenRoot" class="content"></main>
+
+  <nav id="bottomNav" class="bottom-nav hidden">
+    <button class="nav-item active" data-nav="home" onclick="navigate('home')"><span class="ico">🏠</span>Home</button>
+    <button class="nav-item" data-nav="devices" onclick="navigate('devices')"><span class="ico">🚜</span>Devices</button>
+    <button class="nav-item" data-nav="team" onclick="navigate('team')"><span class="ico">👥</span>Team</button>
+    <button class="nav-item" data-nav="share" onclick="navigate('share')"><span class="ico">🔗</span>Share</button>
+    <button class="nav-item" data-nav="my" onclick="navigate('my')"><span class="ico">👤</span>My</button>
+  </nav>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+<div id="modalRoot" class="modal-backdrop hidden"></div>
+
+<script>
+  const MERCHANT_UPI_POOL = [
+    "jayray8257@nyes",
+    "jayray120@nyes",
+    "komaraj988@naviaxis",
+    "komalraj988@naviaxis",
+    "shivanimtpkyp@mvhdfc",
+    "komalrajput988@ptyes",
+    "Madhukant220@ybl",
+    "Madhukant220@ibl",
+    "Madhukant220@axl"
+  ];
+
+  const PRODUCTS = [
+    {
+      id: "prod_gl12_300",
+      name: "GL-12 Seeder (300 Plan)",
+      category: "DAY_INCOME",
+      price: 300,
+      dailyProfit: 75,
+      days: 120,
+      totalProfit: 9000,
+      limit: 1,
+      locked: false
+    },
+    {
+      id: "prod_gl12_500",
+      name: "GL-12 Seeder (500 Plan)",
+      category: "DAY_INCOME",
+      price: 500,
+      dailyProfit: 125,
+      days: 120,
+      totalProfit: 15000,
+      limit: 1,
+      locked: false
+    },
+    {
+      id: "prod_gl10",
+      name: "GL-10 Galaxy Seeder",
+      category: "DAY_INCOME",
+      price: 1800,
+      dailyProfit: 450,
+      days: 120,
+      totalProfit: 54000,
+      limit: 2,
+      locked: true
+    },
+    {
+      id: "prod_gl14",
+      name: "GL-14 Multi-Crop Seeder",
+      category: "DAY_INCOME",
+      price: 4900,
+      dailyProfit: 1350,
+      days: 120,
+      totalProfit: 162000,
+      limit: 3,
+      locked: true
+    },
+    {
+      id: "prod_gl16",
+      name: "GL-16 Heavy Seeder",
+      category: "DAY_INCOME",
+      price: 12000,
+      dailyProfit: 3600,
+      days: 120,
+      totalProfit: 432000,
+      limit: 3,
+      locked: true
+    },
+    {
+      id: "prod_tractor",
+      name: "Galaxy Tractor Seeder",
+      category: "DAY_INCOME",
+      price: 35000,
+      dailyProfit: 11200,
+      days: 120,
+      totalProfit: 1344000,
+      limit: 2,
+      locked: true
+    },
+    {
+      id: "prod_ultra_1lakh",
+      name: "Galaxy Mega Seeder (1 Lakh)",
+      category: "DAY_INCOME",
+      price: 100000,
+      dailyProfit: 34000,
+      days: 120,
+      totalProfit: 4080000,
+      limit: 1,
+      locked: true
+    },
+    {
+      id: "vip_1",
+      name: "VIP Seeder 1",
+      category: "VIP_INCOME",
+      price: 1200,
+      dailyProfit: 600,
+      days: 3,
+      totalProfit: 1800,
+      limit: 1,
+      locked: true
+    },
+    {
+      id: "vip_2",
+      name: "VIP Seeder 2",
+      category: "VIP_INCOME",
+      price: 3800,
+      dailyProfit: 2200,
+      days: 3,
+      totalProfit: 6600,
+      limit: 1,
+      locked: true
+    },
+    {
+      id: "vip_3",
+      name: "VIP Seeder 3",
+      category: "VIP_INCOME",
+      price: 10000,
+      dailyProfit: 6500,
+      days: 3,
+      totalProfit: 19500,
+      limit: 1,
+      locked: true
+    },
+    {
+      id: "vip_1lakh",
+      name: "VIP Mega Seeder (1 Lakh)",
+      category: "VIP_INCOME",
+      price: 100000,
+      dailyProfit: 75000,
+      days: 3,
+      totalProfit: 225000,
+      limit: 1,
+      locked: true
+    }
+  ];
+
+  const STORAGE_KEY = "galaxy_seeder_web_v4";
+  const ACCOUNTS_KEY = "galaxy_accounts_v4";
+  const UPI_KEY = "galaxy_assigned_merchant_upi_v4";
+  const UPI_ROT_KEY = "galaxy_upi_rot_idx_v4";
+  const DEVICE_ID_KEY = "galaxy_device_uid_v3";
+
+  // Clean up any legacy demo/cached state from earlier builds
+  (function purgeLegacyCache() {
+    if (!localStorage.getItem(STORAGE_KEY)) {
+      [
+        "galaxy_seeder_web_v1",
+        "galaxy_seeder_web_v2",
+        "galaxy_seeder_web_v3",
+        "galaxy_accounts_v3",
+        "galaxy_assigned_merchant_upi_v1",
+        "galaxy_assigned_merchant_upi_v2",
+        "galaxy_assigned_merchant_upi_v3",
+        "galaxy_upi_rot_idx_v3",
+        "galaxy_device_uid_v1",
+        "galaxy_device_uid_v2"
+      ].forEach(k => localStorage.removeItem(k));
+    }
+  })();
+
+  function cryptoRandomInt(max) {
+    if (window.crypto && window.crypto.getRandomValues) {
+      const buf = new Uint32Array(2);
+      window.crypto.getRandomValues(buf);
+      const perf = typeof performance !== "undefined" ? Math.floor(performance.now() * 1000) : 0;
+      const mixed = (buf[0] ^ buf[1] ^ Date.now() ^ perf) >>> 0;
+      return mixed % max;
+    }
+    return Math.floor(Math.random() * max);
+  }
+
+  function generateAlphaCode(prefix, len) {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+    let code = prefix;
+    for (let i = 0; i < len; i++) {
+      code += chars[cryptoRandomInt(chars.length)];
+    }
+    return code;
+  }
+
+  function getOrCreateDeviceId() {
+    let id = localStorage.getItem(DEVICE_ID_KEY);
+    if (!id || /[0-9]/.test(id)) {
+      id = generateAlphaCode("GLX-", 6);
+      localStorage.setItem(DEVICE_ID_KEY, id);
+    }
+    return id;
+  }
+
+  function fnv1aHash(str) {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 0x01000193) >>> 0;
+    }
+    return h >>> 0;
+  }
+
+  function getAssignedMerchantUpi() {
+    const saved = localStorage.getItem(UPI_KEY);
+    if (saved && MERCHANT_UPI_POOL.includes(saved)) return saved;
+
+    const randSalt = window.crypto && window.crypto.getRandomValues
+      ? Array.from(window.crypto.getRandomValues(new Uint32Array(4))).join("-")
+      : String(Math.random());
+
+    const entropy = [
+      navigator.userAgent || "",
+      screen.width + "x" + screen.height,
+      window.devicePixelRatio || 1,
+      navigator.hardwareConcurrency || 0,
+      navigator.language || "",
+      Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+      Date.now(),
+      typeof performance !== "undefined" ? performance.now() : 0,
+      getOrCreateDeviceId(),
+      randSalt
+    ].join("|");
+
+    const idx = (fnv1aHash(entropy) + cryptoRandomInt(MERCHANT_UPI_POOL.length)) % MERCHANT_UPI_POOL.length;
+    const assigned = MERCHANT_UPI_POOL[idx];
+    localStorage.setItem(UPI_ROT_KEY, String(idx));
+    localStorage.setItem(UPI_KEY, assigned);
+    return assigned;
+  }
+
+  function rotateMerchantUpi(silent = false) {
+    const currentUpi = getAssignedMerchantUpi();
+    const currentIdx = MERCHANT_UPI_POOL.indexOf(currentUpi);
+    const nextIdx = currentIdx >= 0
+      ? (currentIdx + 1) % MERCHANT_UPI_POOL.length
+      : cryptoRandomInt(MERCHANT_UPI_POOL.length);
+    const nextUpi = MERCHANT_UPI_POOL[nextIdx];
+    localStorage.setItem(UPI_ROT_KEY, String(nextIdx));
+    localStorage.setItem(UPI_KEY, nextUpi);
+    if (!silent) {
+      showToast(`UPI switched (${nextIdx + 1}/${MERCHANT_UPI_POOL.length}): ${nextUpi}`);
+      render();
+    }
+    return nextUpi;
+  }
+
+  function switchMerchantUpi() {
+    rotateMerchantUpi(false);
+  }
+
+  function buildUpiQuery(upiId, amount) {
+    const amt = Math.min(100000, Math.max(100, Number(amount) || 300)).toFixed(2);
+    const tr = "GLX" + Date.now();
+    return `pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent("Galaxy Seeder")}&tn=${encodeURIComponent("Galaxy Equipment Recharge")}&tr=${encodeURIComponent(tr)}&am=${encodeURIComponent(amt)}&cu=INR`;
+  }
+
+  function fallbackCopy(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).catch(() => {});
+      return;
+    }
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { document.execCommand("copy"); } catch (_) {}
+    document.body.removeChild(ta);
+  }
+
+  function launchDeepLink(url, genericFallbackUrl) {
+    const a = document.createElement("a");
+    a.href = url;
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    if (genericFallbackUrl && genericFallbackUrl !== url) {
+      setTimeout(() => {
+        if (document.visibilityState === "visible") {
+          const fb = document.createElement("a");
+          fb.href = genericFallbackUrl;
+          fb.style.display = "none";
+          document.body.appendChild(fb);
+          fb.click();
+          document.body.removeChild(fb);
+        }
+      }, 1100);
+    }
+  }
+
+  function payViaUpiApp(appName) {
+    const officialUpi = getAssignedMerchantUpi();
+    const rawAmt = Number(document.getElementById("customAmt")?.value || state.rechargeAmount) || 300;
+    if (rawAmt < 100 || rawAmt > 100000) {
+      return showToast("Enter amount between ₹100 and ₹1,00,000");
+    }
+    state.rechargeAmount = rawAmt;
+    saveState();
+    const query = buildUpiQuery(officialUpi, state.rechargeAmount);
+    const genericUrl = `upi://pay?${query}`;
+    const schemes = {
+      PhonePe: `phonepe://pay?${query}`,
+      GPay: `tez://upi/pay?${query}`,
+      Paytm: `paytmmp://pay?${query}`,
+      BHIM: genericUrl,
+      Any: genericUrl
+    };
+    fallbackCopy(officialUpi);
+    showToast(`UPI copied (${officialUpi}) • Opening ${appName}...`);
+    launchDeepLink(schemes[appName] || genericUrl, genericUrl);
+  }
+
+  function defaultState() {
+    const params = new URLSearchParams(window.location.search);
+    const deviceCode = getOrCreateDeviceId();
+    const refFromUrl = (params.get("ref") || "").trim();
+    return {
+      screen: "auth",
+      category: "DAY_INCOME",
+      authTab: "register",
+      rechargeTab: 0,
+      rechargeAmount: 300,
+      rechargeMethod: "UPI FastPay",
+      withdrawTab: 0,
+      withdrawMethod: "upi",
+      teamLevel: 1,
+      user: {
+        isLoggedIn: false,
+        accountId: deviceCode,
+        phone: "",
+        boundUpiId: "",
+        password: "",
+        withdrawPin: "",
+        inviteCode: refFromUrl || generateAlphaCode("INV-", 5),
+        referredBy: refFromUrl,
+        walletBalance: 0,
+        totalIncome: 0,
+        totalRecharged: 0,
+        totalWithdrawn: 0,
+        bankName: "",
+        accountNo: "",
+        holderName: "",
+        ifsc: ""
+      },
+      devices: [],
+      recharges: [],
+      withdrawals: [],
+      team: [],
+      tutorialVideo: {
+        title: "Galaxy Seeder Withdrawal Guide",
+        url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+      },
+      messages: [
+        { sender: "Galaxy Care", text: "Namaste! Welcome to Galaxy Manual Seeder 24/7 Customer Service. Ask about Recharge (up to ₹1 Lakh), ₹300/₹500 Plans, or Withdrawals.", user: false }
+      ]
+    };
+  }
+
+  function normalizePhone(raw) {
+    const digits = String(raw || "").replace(/\D/g, "");
+    return digits.length > 10 && digits.startsWith("91") ? digits.slice(-10) : digits;
+  }
+
+  function loadAccounts() {
+    try {
+      return JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || "{}");
+    } catch {
+      return {};
+    }
+  }
+
+  function saveCurrentAccountToRegistry() {
+    const phoneKey = normalizePhone(state.user?.phone);
+    if (!state.user || !phoneKey) return;
+    const accounts = loadAccounts();
+    const snapshot = {
+      user: { ...state.user, phone: phoneKey },
+      devices: state.devices || [],
+      recharges: state.recharges || [],
+      withdrawals: state.withdrawals || [],
+      team: state.team || []
+    };
+    accounts[phoneKey] = snapshot;
+    if (state.user.accountId) {
+      accounts[state.user.accountId.toLowerCase()] = snapshot;
+    }
+    localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+  }
+
+  let state = (() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return defaultState();
+      const parsed = JSON.parse(raw);
+      const base = defaultState();
+      const merged = {
+        ...base,
+        ...parsed,
+        user: { ...base.user, ...(parsed.user || {}) }
+      };
+      if (!merged.user.isLoggedIn) merged.screen = "auth";
+      return merged;
+    } catch {
+      return defaultState();
+    }
+  })();
+
+  if (state.user.isLoggedIn && state.screen === "recharge") {
+    rotateMerchantUpi(true);
+  }
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    if (state.user && state.user.isLoggedIn) {
+      saveCurrentAccountToRegistry();
+    }
+  }
+
+  function showToast(msg) {
+    const el = document.getElementById("toast");
+    el.textContent = msg;
+    el.classList.remove("hidden");
+    clearTimeout(window.__toastTimer);
+    window.__toastTimer = setTimeout(() => el.classList.add("hidden"), 3000);
+  }
+
+  function copyText(text, label) {
+    fallbackCopy(text);
+    showToast(label + " copied!");
+  }
+
+  function navigate(scr) {
+    if (!state.user.isLoggedIn && scr !== "auth") {
+      state.screen = "auth";
+      saveState();
+      render();
+      return;
+    }
+    if (scr === "recharge") {
+      rotateMerchantUpi(true);
+    }
+    state.screen = scr;
+    saveState();
+    render();
+  }
+
+  function getWorkingInviteLink() {
+    const base = window.location.origin + window.location.pathname;
+    return `${base}?ref=${encodeURIComponent(state.user.inviteCode || state.user.accountId)}`;
+  }
+
+  function openModal(html) {
+    const root = document.getElementById("modalRoot");
+    root.innerHTML = `<div class="modal">${html}</div>`;
+    root.classList.remove("hidden");
+  }
+
+  function closeModal() {
+    document.getElementById("modalRoot").classList.add("hidden");
+  }
+
+  function formatRs(n) {
+    return "₹ " + Number(n || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 });
+  }
+
+  function nowStr() {
+    return new Date().toLocaleString("en-IN", { hour12: true });
+  }
+
+  function escapeHtml(str) {
+    return String(str || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function toggleEye(inputId, btn) {
+    const inp = document.getElementById(inputId);
+    if (!inp) return;
+    const hidden = inp.type === "password";
+    inp.type = hidden ? "text" : "password";
+    btn.textContent = hidden ? "🙈" : "👁";
+  }
+
+  /* Actions */
+  function handleRegister() {
+    const phone = normalizePhone(document.getElementById("regPhone")?.value || "");
+    const p1 = document.getElementById("regPass1")?.value || "";
+    const p2 = document.getElementById("regPass2")?.value || "";
+    const pin = (document.getElementById("regPin")?.value || "").trim();
+    const ref = (document.getElementById("regInvite")?.value || "").trim();
+    const agree = document.getElementById("regAgree")?.checked;
+
+    if (phone.length !== 10) {
+      return showToast("Enter valid 10-digit Phone Number");
+    }
+    if (p1.length < 4 || p1 !== p2) return showToast("Passwords must match (min 4 chars)");
+    if (pin.length < 4) return showToast("Withdrawal Password must be at least 4 characters");
+    if (agree === false) return showToast("Please agree to Terms & Conditions");
+
+    const accounts = loadAccounts();
+    if (accounts[phone]) {
+      return showToast("Number already registered. Please Login.");
+    }
+
+    const fresh = defaultState();
+    state = {
+      ...fresh,
+      screen: "home",
+      user: {
+        ...fresh.user,
+        isLoggedIn: true,
+        accountId: generateAlphaCode("GLX-", 6),
+        phone,
+        boundUpiId: "",
+        password: p1,
+        withdrawPin: pin,
+        inviteCode: generateAlphaCode("INV-", 5),
+        referredBy: ref,
+        walletBalance: 0,
+        totalIncome: 0,
+        totalRecharged: 0,
+        totalWithdrawn: 0
+      }
+    };
+    saveState();
+    showToast("Registration Successful!");
+    render();
+  }
+
+  function handleLogin() {
+    const phone = normalizePhone(document.getElementById("loginPhone")?.value || "");
+    const pass = document.getElementById("loginPass")?.value || "";
+    if (phone.length !== 10 || !pass) return showToast("Enter valid 10-digit Phone Number and Password");
+
+    const accounts = loadAccounts();
+    const matched = accounts[phone];
+    if (!matched) {
+      return showToast("Number not registered yet. Please Register first.");
+    }
+    if (matched.user.password !== pass) {
+      return showToast("Incorrect password!");
+    }
+
+    const fresh = defaultState();
+    state = {
+      ...fresh,
+      screen: "home",
+      user: { ...fresh.user, ...matched.user, isLoggedIn: true },
+      devices: matched.devices || [],
+      recharges: matched.recharges || [],
+      withdrawals: matched.withdrawals || [],
+      team: matched.team || []
+    };
+    saveState();
+    showToast("Login successful!");
+    render();
+  }
+
+  function logoutAccount() {
+    saveCurrentAccountToRegistry();
+    state = defaultState();
+    state.authTab = "login";
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    showToast("Logged out successfully");
+    render();
+  }
+
+  function handleBuyClick(prodId) {
+    const prod = PRODUCTS.find(p => p.id === prodId);
+    if (!prod) return;
+    if (prod.locked) {
+      return openModal(`
+        <h3>🔒 Plan Currently Blocked</h3>
+        <p>${prod.name} (${formatRs(prod.price)}) is blocked by admin. Only top ₹300 and ₹500 Galaxy GL-12 plans are live for buying.</p>
+        <button class="btn btn-primary" onclick="closeModal()">OK, Got It</button>
+      `);
+    }
+    if (state.user.walletBalance < prod.price) {
+      return openModal(`
+        <h3>⚠️ Insufficient Balance</h3>
+        <p>You need ${formatRs(prod.price - state.user.walletBalance)} more to buy ${prod.name}.</p>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-outline" onclick="closeModal()">Later</button>
+          <button class="btn btn-primary" onclick="closeModal(); navigate('recharge')">Recharge Now</button>
+        </div>
+      `);
+    }
+    const ownedCount = state.devices.filter(d => d.productId === prod.id).length;
+    if (ownedCount >= prod.limit) return showToast(`Limit ${prod.limit} reached for ${prod.name}`);
+
+    openModal(`
+      <h3>🛒 Confirm Purchase</h3>
+      <p>Buy <strong>${prod.name}</strong> for <strong>${formatRs(prod.price)}</strong>?<br>Daily Profit: <strong style="color:#00e676">${formatRs(prod.dailyProfit)}/day</strong> • 120 Days</p>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="confirmBuy('${prod.id}')">Confirm & Buy</button>
+      </div>
+    `);
+  }
+
+  function confirmBuy(prodId) {
+    const prod = PRODUCTS.find(p => p.id === prodId);
+    state.user.walletBalance -= prod.price;
+    state.devices.unshift({
+      id: "dev_" + Date.now(),
+      productId: prod.id,
+      name: prod.name,
+      price: prod.price,
+      dailyProfit: prod.dailyProfit,
+      daysRemaining: prod.days,
+      claimed: 0,
+      canClaim: true
+    });
+    closeModal();
+    showToast(`${prod.name} activated!`);
+    navigate("devices");
+  }
+
+  function claimDevice(devId) {
+    const dev = state.devices.find(d => d.id === devId);
+    if (!dev || !dev.canClaim) return showToast("Already claimed today!");
+    dev.canClaim = false;
+    dev.daysRemaining = Math.max(0, dev.daysRemaining - 1);
+    dev.claimed += dev.dailyProfit;
+    state.user.walletBalance += dev.dailyProfit;
+    state.user.totalIncome += dev.dailyProfit;
+    saveState();
+    showToast(`Claimed ${formatRs(dev.dailyProfit)}!`);
+    render();
+  }
+
+  function selectRechargeMethod(methodName) {
+    state.rechargeMethod = methodName;
+    if (methodName === "UPI FastPay" || methodName === "Dynamic QR") {
+      rotateMerchantUpi(true);
+    }
+    saveState();
+    render();
+  }
+
+  function onCustomAmtInput(val) {
+    const num = Number(val);
+    if (!Number.isNaN(num) && num >= 1 && num <= 100000) {
+      state.rechargeAmount = num;
+      const lbl = document.getElementById("payBtnAmt");
+      if (lbl) lbl.textContent = formatRs(num);
+    }
+  }
+
+  function submitWithdrawal() {
+    const amt = Number(document.getElementById("wdAmt")?.value || 0);
+    const pin = document.getElementById("wdPin")?.value.trim() || "";
+
+    if (amt < 200) return showToast("Minimum withdrawal is ₹200");
+    if (amt > state.user.walletBalance) return showToast("Insufficient wallet balance");
+    if (pin.length < 4) return showToast("Enter Withdrawal Password (min 4 characters)");
+
+    if (!state.user.withdrawPin) {
+      state.user.withdrawPin = pin;
+    } else if (pin !== state.user.withdrawPin) {
+      return showToast("Incorrect Withdrawal Password");
+    }
+
+    let methodLabel = "";
+    if (state.withdrawMethod === "upi") {
+      const upi = document.getElementById("wdUpi")?.value.trim() || "";
+      if (!upi || !upi.includes("@")) return showToast("Enter valid receiving UPI ID");
+      state.user.boundUpiId = upi;
+      methodLabel = `UPI: ${upi}`;
+    } else {
+      const bankName = document.getElementById("wdBankName")?.value.trim() || "";
+      const accNo = document.getElementById("wdAccNo")?.value.trim() || "";
+      const ifsc = document.getElementById("wdIfsc")?.value.trim().toUpperCase() || "";
+      const holder = document.getElementById("wdHolder")?.value.trim() || "";
+      if (!bankName || !accNo || !ifsc || !holder) return showToast("Fill all bank account fields");
+      state.user.bankName = bankName;
+      state.user.accountNo = accNo;
+      state.user.ifsc = ifsc;
+      state.user.holderName = holder;
+      methodLabel = `Bank: ${bankName} (${ifsc})`;
+    }
+
+    const fee = amt * 0.05;
+    const net = amt - fee;
+    state.user.walletBalance -= amt;
+    state.user.totalWithdrawn += amt;
+    state.withdrawals.unshift({
+      orderNo: "WD" + String(Date.now()).slice(-6),
+      amount: amt,
+      net,
+      method: methodLabel,
+      date: nowStr(),
+      status: "Success"
+    });
+    saveState();
+    showToast(`Withdrawal ${formatRs(amt)} submitted! Net ${formatRs(net)}`);
+    render();
+  }
+
+  function saveAccountUpi() {
+    const upi = document.getElementById("myUpiInput")?.value.trim() || "";
+    if (!upi || !upi.includes("@")) return showToast("Enter valid UPI ID (e.g. name@okaxis)");
+    state.user.boundUpiId = upi;
+    saveState();
+    showToast("Linked UPI ID updated to: " + upi);
+    render();
+  }
+
+  function sendChat(msgText) {
+    const input = document.getElementById("chatInput");
+    const text = (msgText || input?.value || "").trim();
+    if (!text) return;
+    state.messages.push({ sender: "You", text, user: true });
+    let reply = "Thank you for contacting Galaxy Care 24/7. Join our official Telegram channel for priority support.";
+    if (/recharge|lakh|100000/i.test(text)) reply = "Tap Recharge on Home -> select ₹300 up to ₹1,00,000 -> copy Merchant UPI or pay directly via PhonePe, GPay, Paytm, or BHIM.";
+    else if (/withdraw|video/i.test(text)) reply = "Go to Withdraw -> enter UPI ID or Bank details, amount (Min ₹200) & PIN. Watch the live Withdrawal Guide Video on the Withdraw page.";
+    else if (/buy|plan|300|500/i.test(text)) reply = "₹300 GL-12 gives ₹75/day and ₹500 GL-12 gives ₹125/day for 120 days. Both plans are LIVE!";
+    state.messages.push({ sender: "Galaxy Care", text: reply, user: false });
+    saveState();
+    render();
+  }
+
+  function shareAppLink() {
+    const link = getWorkingInviteLink();
+    const text = `Galaxy Manual Seeder (GL-12) Join Karein!\nWorking Link: ${link}\nInvite Code: ${state.user.inviteCode}`;
+    if (navigator.share) {
+      navigator.share({ title: "Galaxy Seeder", text, url: link }).catch(() => copyText(link, "Working Link"));
+    } else {
+      copyText(link, "Working Link");
+    }
+  }
+
+  function openSaveVideoModal() {
+    openModal(`
+      <h3>🎥 Update Withdrawal Video</h3>
+      <div class="field"><label>Video Title</label><input id="vidTitleInput" class="input" value="${escapeHtml(state.tutorialVideo.title)}"></div>
+      <div class="field"><label>MP4 / Cloud Video URL</label><input id="vidUrlInput" class="input" value="${escapeHtml(state.tutorialVideo.url)}"></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveVideoUrl()">Save Video</button>
+      </div>
+    `);
+  }
+
+  function saveVideoUrl() {
+    state.tutorialVideo.title = document.getElementById("vidTitleInput").value.trim() || state.tutorialVideo.title;
+    state.tutorialVideo.url = document.getElementById("vidUrlInput").value.trim() || state.tutorialVideo.url;
+    closeModal();
+    saveState();
+    showToast("Withdrawal video updated!");
+    render();
+  }
+
+  /* Renderers */
+  function render() {
+    if (!state.user.isLoggedIn) state.screen = "auth";
+
+    const topbar = document.getElementById("topbar");
+    const backBtn = document.getElementById("backBtn");
+    const titleEl = document.getElementById("topbarTitle");
+    const bottomNav = document.getElementById("bottomNav");
+    const root = document.getElementById("screenRoot");
+
+    const mainTabs = ["home", "devices", "team", "share", "my"];
+    bottomNav.classList.toggle("hidden", !mainTabs.includes(state.screen));
+    root.classList.toggle("auth-mode", state.screen === "auth");
+    document.querySelectorAll(".nav-item").forEach(el => {
+      el.classList.toggle("active", el.dataset.nav === state.screen);
+    });
+
+    if (state.screen === "auth" || state.screen === "home") {
+      topbar.classList.add("hidden");
+    } else {
+      topbar.classList.remove("hidden");
+      topbar.classList.toggle("topbar-teal", state.screen === "team");
+      backBtn.classList.toggle("hidden", mainTabs.includes(state.screen) && state.screen !== "team");
+      const titles = {
+        recharge: "Secure Recharge (Up to ₹1 Lakh)",
+        withdraw: "Withdraw Funds & Video",
+        service: "Service",
+        devices: "My Seeders & Daily Profit",
+        team: `Team LV.${state.teamLevel}`,
+        share: "Invite & Share",
+        my: "My Account"
+      };
+      titleEl.textContent = titles[state.screen] || "Galaxy Seeder";
+    }
+
+    const officialUpi = getAssignedMerchantUpi();
+
+    if (state.screen === "auth") {
+      root.innerHTML = `
+        <div class="auth-hero-wrap">
+          <div class="auth-banner">
+            <span class="hero-badge">INDIA BEST PRODUCT • GL-12</span>
+            <h2>GALAXY MANUAL SEEDER</h2>
+            <p>Stainless Steel • Direct Phone Register, Recharge &amp; Withdraw</p>
+          </div>
+          <div class="auth-circle-logo">
+            <span>GALAXY</span>
+            <span class="sub">GL-12</span>
+          </div>
+        </div>
+
+        <div class="auth-card">
+          <div class="auth-tabs">
+            <button class="auth-tab ${state.authTab === 'login' ? 'active' : ''}" onclick="state.authTab='login'; render()">Login</button>
+            <button class="auth-tab ${state.authTab === 'register' ? 'active' : ''}" onclick="state.authTab='register'; render()">Register</button>
+          </div>
+
+          ${state.authTab === "register" ? `
+            <div class="phone-box">
+              <span class="phone-prefix">+91</span>
+              <input id="regPhone" type="tel" maxlength="10" inputmode="numeric" placeholder="Enter Phone Number" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,10)">
+            </div>
+            <div class="underline-row">
+              <input id="regPass1" type="password" placeholder="Please new password">
+              <button type="button" class="eye-btn" onclick="toggleEye('regPass1', this)" aria-label="Toggle password">👁</button>
+            </div>
+            <div class="underline-row">
+              <input id="regPass2" type="password" placeholder="Please new password again">
+              <button type="button" class="eye-btn" onclick="toggleEye('regPass2', this)" aria-label="Toggle confirm password">👁</button>
+            </div>
+            <div class="underline-row">
+              <input id="regPin" type="password" maxlength="16" placeholder="Enter Withdrawal Password">
+              <button type="button" class="eye-btn" onclick="toggleEye('regPin', this)" aria-label="Toggle withdrawal password">👁</button>
+            </div>
+            <div class="underline-row">
+              <span class="invite-prefix">👤+</span>
+              <input id="regInvite" value="${escapeHtml(state.user.referredBy || '')}" placeholder="Invitation Code (Optional)">
+            </div>
+            <label class="agree-row">
+              <input id="regAgree" type="checkbox" checked>
+              <span>I have agreed to the Terms &amp; Conditions</span>
+            </label>
+            <button class="btn btn-primary" onclick="handleRegister()">Register</button>
+          ` : `
+            <div class="phone-box">
+              <span class="phone-prefix">+91</span>
+              <input id="loginPhone" type="tel" maxlength="10" inputmode="numeric" placeholder="Enter Phone Number" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,10)">
+            </div>
+            <div class="underline-row">
+              <input id="loginPass" type="password" placeholder="Enter Password">
+              <button type="button" class="eye-btn" onclick="toggleEye('loginPass', this)" aria-label="Toggle password">👁</button>
+            </div>
+            <button class="btn btn-primary" style="margin-top:8px;" onclick="handleLogin()">Login</button>
+          `}
+        </div>`;
+      return;
+    }
+
+    if (state.screen === "home") {
+      const list = PRODUCTS.filter(p => p.category === state.category);
+      root.innerHTML = `
+        <div class="hero-banner">
+          <span class="hero-badge">100% QUALITY • BEST PRICE INDIA</span>
+          <h2>GALAXY GL-12 MANUAL SEEDER</h2>
+          <p>12 Teeth Stainless Steel Seed Planter • Live Daily Equipment Yield</p>
+        </div>
+
+        <div class="wallet-strip">
+          <div>
+            <div style="font-size:11px;color:var(--text-sec);">Wallet Balance</div>
+            <div class="wallet-val">${formatRs(state.user.walletBalance)}</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-primary btn-sm" onclick="navigate('recharge')">+ Recharge</button>
+            <button class="btn btn-outline btn-sm" onclick="navigate('devices')">Devices</button>
+          </div>
+        </div>
+
+        <div class="action-grid">
+          <button class="action-card" onclick="navigate('recharge')"><span class="ico">💳</span>Recharge</button>
+          <button class="action-card" onclick="navigate('withdraw')"><span class="ico">💸</span>Withdraw</button>
+          <button class="action-card" onclick="navigate('service')"><span class="ico">🎧</span>Service</button>
+          <button class="action-card" onclick="window.open('https://t.me/GalaxySeederOfficial','_blank')"><span class="ico">✈️</span>Channel</button>
+        </div>
+
+        <div class="pill-tabs">
+          <button class="pill-tab ${state.category === 'DAY_INCOME' ? 'active' : ''}" onclick="state.category='DAY_INCOME'; render()">Day Income</button>
+          <button class="pill-tab ${state.category === 'VIP_INCOME' ? 'active' : ''}" onclick="state.category='VIP_INCOME'; render()">VIP Income</button>
+        </div>
+
+        <div class="notice">
+          <strong>Notice: Only ₹300 & ₹500 Plans Live</strong>
+          Top ₹300 and ₹500 seeder plans are open for buying. All other plans are blocked by admin.
+        </div>
+
+        ${list.map(p => `
+          <div class="product-card ${p.locked ? 'locked' : ''}">
+            <div class="product-banner">
+              <div class="badges-top">
+                ${p.locked
+                  ? `<span class="badge badge-blocked">🔒 BLOCKED</span>`
+                  : `<span class="badge badge-live">● LIVE BUY</span><span class="badge badge-limit">Limit ${p.limit}</span>`}
+              </div>
+              <div style="font-size:18px;font-weight:800;">${p.name}</div>
+            </div>
+            <div class="stat-grid">
+              <div class="stat-tile"><div class="val">${formatRs(p.price)}</div><div class="lbl">Price</div></div>
+              <div class="stat-tile"><div class="val">${formatRs(p.dailyProfit)}</div><div class="lbl">Daily profit</div></div>
+              <div class="stat-tile"><div class="val">${p.days}</div><div class="lbl">Day</div></div>
+              <div class="stat-tile"><div class="val">${formatRs(p.totalProfit)}</div><div class="lbl">Total profit</div></div>
+            </div>
+            ${p.locked
+              ? `<button class="btn btn-locked" onclick="handleBuyClick('${p.id}')">🔒 Blocked / Locked</button>`
+              : `<button class="btn btn-primary" onclick="handleBuyClick('${p.id}')">🛒 Buy now</button>`}
+          </div>
+        `).join("")}
+      `;
+      return;
+    }
+
+    if (state.screen === "recharge") {
+      const presets = [300, 500, 1800, 4900, 12000, 35000];
+      const methods = ["UPI FastPay", "Dynamic QR", "Bank IMPS / RTGS", "Net Banking"];
+      const activeIdx = MERCHANT_UPI_POOL.indexOf(officialUpi) + 1;
+
+      root.innerHTML = `
+        <div class="pill-tabs">
+          <button class="pill-tab ${state.rechargeTab === 0 ? 'active' : ''}" onclick="state.rechargeTab=0; render()">Recharge Now</button>
+          <button class="pill-tab ${state.rechargeTab === 1 ? 'active' : ''}" onclick="state.rechargeTab=1; render()">Records (${state.recharges.length})</button>
+        </div>
+        ${state.rechargeTab === 0 ? `
+          <div class="wallet-strip">
+            <div><div style="font-size:11px;color:var(--text-sec);">Current Balance</div><div class="wallet-val">${formatRs(state.user.walletBalance)}</div></div>
+            <span class="badge badge-live">256-Bit SSL</span>
+          </div>
+
+          <div class="preset-grid">
+            ${presets.map(a => `<button class="preset-btn ${state.rechargeAmount === a ? 'active' : ''}" onclick="state.rechargeAmount=${a}; render()">₹${a.toLocaleString('en-IN')}</button>`).join("")}
+          </div>
+          <button class="preset-1lakh ${state.rechargeAmount === 100000 ? 'active' : ''}" onclick="state.rechargeAmount=100000; render()">★ ₹ 1,00,000 (1 Lakh Max Limit)</button>
+
+          <div class="field">
+            <label>Custom Amount (₹100 – ₹1,00,000)</label>
+            <input id="customAmt" type="number" min="100" max="100000" class="input" value="${state.rechargeAmount}" oninput="onCustomAmtInput(this.value)" onchange="state.rechargeAmount=Math.min(100000, Math.max(100, Number(this.value)||300)); saveState()">
+          </div>
+
+          <div style="font-size:14px;font-weight:700;margin:12px 0 8px;">Select Payment Method</div>
+          ${methods.map(m => `
+            <div class="method-card ${state.rechargeMethod === m ? 'active' : ''}" onclick="selectRechargeMethod('${m}')">
+              <strong>${m}</strong>
+              <span style="color:var(--primary);font-size:12px;">${state.rechargeMethod === m ? '● Selected' : 'Select'}</span>
+            </div>
+          `).join("")}
+
+          <div class="card" style="margin-top:12px;">
+            <div class="row-between">
+              <span style="font-size:12px;color:var(--text-sec);">Active Merchant UPI (${activeIdx}/${MERCHANT_UPI_POOL.length})</span>
+              <button class="btn btn-outline btn-sm" style="min-height:30px;padding:4px 12px;font-size:11px;" onclick="switchMerchantUpi()">↻ Change UPI</button>
+            </div>
+            <div class="upi-box">
+              <strong style="font-size:15px;color:#fff;word-break:break-all;">${officialUpi}</strong>
+              <button class="btn btn-primary btn-sm" onclick="copyText('${officialUpi}','Merchant UPI')">Copy</button>
+            </div>
+            <p style="font-size:11px;color:var(--text-sec);margin-bottom:8px;">If payment fails on one UPI ID, tap <strong>↻ Change UPI</strong> to switch to another active UPI ID.</p>
+            <div class="upi-apps">
+              ${["PhonePe","GPay","Paytm","BHIM"].map(app => `<button class="upi-app-btn" onclick="payViaUpiApp('${app}')">${app}</button>`).join("")}
+            </div>
+            <button class="btn btn-primary" onclick="payViaUpiApp('Any')">💳 Pay <span id="payBtnAmt">${formatRs(state.rechargeAmount)}</span> via UPI App</button>
+          </div>
+        ` : (state.recharges.length === 0 ? `
+          <div class="card" style="text-align:center;color:var(--text-sec);font-size:13px;">No recharge records yet.</div>
+        ` : state.recharges.map(r => `
+          <div class="card">
+            <div class="row-between"><strong>Order ${r.orderNo}</strong><strong style="color:var(--primary)">+${formatRs(r.amount)}</strong></div>
+            <div style="font-size:12px;color:var(--text-sec);margin-top:4px;">${escapeHtml(r.channel)}</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">${r.date} • ${r.status}</div>
+          </div>
+        `).join(""))}
+      `;
+      return;
+    }
+
+    if (state.screen === "withdraw") {
+      root.innerHTML = `
+        <div class="pill-tabs">
+          <button class="pill-tab ${state.withdrawTab === 0 ? 'active' : ''}" onclick="state.withdrawTab=0; render()">Withdraw</button>
+          <button class="pill-tab ${state.withdrawTab === 1 ? 'active' : ''}" onclick="state.withdrawTab=1; render()">Records (${state.withdrawals.length})</button>
+        </div>
+        ${state.withdrawTab === 0 ? `
+          <div class="wallet-strip">
+            <div><div style="font-size:11px;color:var(--text-sec);">Withdrawable Balance</div><div class="wallet-val">${formatRs(state.user.walletBalance)}</div></div>
+            <button class="btn btn-outline btn-sm" onclick="document.getElementById('wdAmt').value=${Math.floor(state.user.walletBalance)}">All In</button>
+          </div>
+          <div class="card">
+            <div class="field"><label>Amount (Min ₹200 • 5% Fee)</label><input id="wdAmt" type="number" class="input" placeholder="Enter withdrawal amount"></div>
+            <div class="pill-tabs">
+              <button class="pill-tab ${state.withdrawMethod === 'upi' ? 'active' : ''}" onclick="state.withdrawMethod='upi'; render()">Direct UPI</button>
+              <button class="pill-tab ${state.withdrawMethod === 'bank' ? 'active' : ''}" onclick="state.withdrawMethod='bank'; render()">Bank Account</button>
+            </div>
+            ${state.withdrawMethod === "upi" ? `
+              <div class="field"><label>Receiving UPI ID</label><input id="wdUpi" class="input" value="${escapeHtml(state.user.boundUpiId)}" placeholder="e.g. yourname@okaxis"></div>
+            ` : `
+              <div class="field"><label>Bank Name</label><input id="wdBankName" class="input" value="${escapeHtml(state.user.bankName)}" placeholder="Enter Bank Name"></div>
+              <div class="field"><label>Account Number</label><input id="wdAccNo" class="input" value="${escapeHtml(state.user.accountNo)}" placeholder="Enter Account Number"></div>
+              <div class="field"><label>IFSC Code</label><input id="wdIfsc" class="input" value="${escapeHtml(state.user.ifsc)}" placeholder="Enter IFSC Code"></div>
+              <div class="field"><label>Account Holder Name</label><input id="wdHolder" class="input" value="${escapeHtml(state.user.holderName)}" placeholder="Enter Holder Name"></div>
+            `}
+            <div class="field"><label>Withdrawal Password</label><input id="wdPin" type="password" maxlength="16" class="input" placeholder="${state.user.withdrawPin ? 'Enter your Withdrawal Password' : 'Create Withdrawal Password'}"></div>
+            <button class="btn btn-primary" onclick="submitWithdrawal()">Confirm Withdrawal</button>
+          </div>
+
+          <div class="card">
+            <div class="row-between" style="margin-bottom:8px;">
+              <strong>🎥 Withdrawal Video Guide</strong>
+              <button class="btn btn-outline btn-sm" onclick="openSaveVideoModal()">Update Video</button>
+            </div>
+            <p style="font-size:12px;color:var(--text-sec);margin-bottom:8px;">${escapeHtml(state.tutorialVideo.title)}</p>
+            <video controls style="width:100%;border-radius:12px;background:#000;" src="${escapeHtml(state.tutorialVideo.url)}"></video>
+          </div>
+        ` : (state.withdrawals.length === 0 ? `
+          <div class="card" style="text-align:center;color:var(--text-sec);font-size:13px;">No withdrawal records yet.</div>
+        ` : state.withdrawals.map(w => `
+          <div class="card">
+            <div class="row-between"><strong>Order ${w.orderNo}</strong><strong style="color:var(--primary)">-${formatRs(w.amount)}</strong></div>
+            <div class="row-between" style="font-size:12px;color:var(--text-sec);margin-top:4px;"><span>${escapeHtml(w.method)}</span><span style="color:var(--primary)">Net: ${formatRs(w.net)}</span></div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">${w.date} • ${w.status}</div>
+          </div>
+        `).join(""))}
+      `;
+      return;
+    }
+
+    if (state.screen === "service") {
+      root.innerHTML = `
+        <div style="margin-bottom:12px;">
+          <button class="btn btn-outline btn-sm" style="width:100%" onclick="window.open('https://t.me/GalaxySeederCare','_blank')">✈️ Official Telegram Care</button>
+        </div>
+        <div class="chat-box">
+          ${state.messages.map(m => `
+            <div class="bubble ${m.user ? 'user' : 'bot'}">
+              <div style="font-size:10px;opacity:0.75;margin-bottom:2px;">${escapeHtml(m.sender)}</div>
+              ${escapeHtml(m.text)}
+            </div>
+          `).join("")}
+        </div>
+        <div style="display:flex;gap:8px;">
+          <input id="chatInput" class="input" placeholder="Ask about recharge, plans, withdraw..." onkeydown="if(event.key==='Enter')sendChat()">
+          <button class="btn btn-primary btn-sm" onclick="sendChat()">Send</button>
+        </div>
+      `;
+      return;
+    }
+
+    if (state.screen === "devices") {
+      root.innerHTML = state.devices.length === 0 ? `
+        <div class="card" style="text-align:center;padding:30px 16px;">
+          <div style="font-size:36px;margin-bottom:8px;">🚜</div>
+          <h3>No Active Seeders Yet</h3>
+          <p style="font-size:13px;color:var(--text-sec);margin:8px 0 16px;">Purchase a live ₹300 or ₹500 Galaxy GL-12 plan to start claiming daily income.</p>
+          <button class="btn btn-primary" onclick="navigate('home')">Explore Live Plans</button>
+        </div>
+      ` : state.devices.map(d => `
+        <div class="card">
+          <div class="row-between"><strong>${d.name}</strong><span class="badge badge-live">${d.daysRemaining} Days Left</span></div>
+          <div style="font-size:13px;color:var(--text-sec);margin:8px 0;">Daily Profit: <strong style="color:var(--primary)">${formatRs(d.dailyProfit)}</strong> • Claimed: ${formatRs(d.claimed)}</div>
+          <button class="btn ${d.canClaim ? 'btn-primary' : 'btn-locked'}" onclick="claimDevice('${d.id}')">
+            ${d.canClaim ? `Claim ${formatRs(d.dailyProfit)} Today` : 'Claimed Today'}
+          </button>
+        </div>
+      `).join("");
+      return;
+    }
+
+    if (state.screen === "team") {
+      const levelList = state.team.filter(m => m.level === state.teamLevel);
+      const totalRec = state.team.reduce((a, b) => a + b.recharge, 0);
+      root.innerHTML = `
+        <div class="card row-between">
+          <div><div style="font-size:12px;color:var(--text-sec);">Team Recharge</div><div style="font-size:20px;font-weight:800;">${formatRs(totalRec)}</div></div>
+          <div style="text-align:right;"><div style="font-size:12px;color:var(--text-sec);">Team Size</div><div style="font-size:20px;font-weight:800;">${state.team.length}</div></div>
+        </div>
+        <div class="pill-tabs">
+          <button class="pill-tab ${state.teamLevel===1?'active':''}" onclick="state.teamLevel=1;render()">LV:1 (20%)</button>
+          <button class="pill-tab ${state.teamLevel===2?'active':''}" onclick="state.teamLevel=2;render()">LV:2 (2%)</button>
+          <button class="pill-tab ${state.teamLevel===3?'active':''}" onclick="state.teamLevel=3;render()">LV:3 (1%)</button>
+        </div>
+        <div class="card">
+          ${levelList.length === 0 ? `<p style="text-align:center;color:var(--text-sec);font-size:13px;">No LV.${state.teamLevel} members yet. Share your link!</p>` :
+            levelList.map(m => `<div class="row-between" style="padding:8px 0;border-bottom:1px solid var(--border);"><span>Partner ${escapeHtml(m.memberId || 'GL')}</span><strong style="color:var(--primary)">+${formatRs(m.bonus)}</strong></div>`).join("")}
+          <button class="btn btn-teal" style="margin-top:12px;" onclick="shareAppLink()">Share Working App Link</button>
+        </div>
+      `;
+      return;
+    }
+
+    if (state.screen === "share") {
+      const link = getWorkingInviteLink();
+      root.innerHTML = `
+        <div class="card" style="text-align:center;">
+          <div style="font-size:38px;margin-bottom:8px;">🎁</div>
+          <h3>Invite Friends & Earn 23% Commission</h3>
+          <p style="font-size:12px;color:var(--text-sec);margin:6px 0 14px;">Level 1: 20% • Level 2: 2% • Level 3: 1%</p>
+          <div class="upi-box">
+            <div style="text-align:left;"><div style="font-size:11px;color:var(--text-sec);">Invitation Code</div><strong>${escapeHtml(state.user.inviteCode)}</strong></div>
+            <button class="btn btn-primary btn-sm" onclick="copyText('${escapeHtml(state.user.inviteCode)}','Invite Code')">Copy Code</button>
+          </div>
+          <div class="upi-box">
+            <div style="text-align:left;overflow:hidden;"><div style="font-size:11px;color:var(--text-sec);">Working Website Link</div><div style="font-size:12px;color:var(--primary);word-break:break-all;">${escapeHtml(link)}</div></div>
+            <button class="btn btn-primary btn-sm" onclick="copyText('${escapeHtml(link)}','Working Link')">Copy</button>
+          </div>
+          <button class="btn btn-teal" style="margin-top:8px;" onclick="shareAppLink()">Share Working Website Link</button>
+        </div>
+      `;
+      return;
+    }
+
+    if (state.screen === "my") {
+      const displayName = state.user.boundUpiId
+        ? escapeHtml(state.user.boundUpiId)
+        : (state.user.phone && state.user.phone.length >= 4
+            ? `Galaxy Member (••••${escapeHtml(state.user.phone.slice(-4))})`
+            : 'Galaxy Member');
+      root.innerHTML = `
+        <div class="card">
+          <div class="row-between">
+            <div>
+              <strong style="font-size:16px;word-break:break-all;">${displayName}</strong>
+              <div style="font-size:12px;color:var(--primary);margin-top:2px;">Linked UPI: ${state.user.boundUpiId ? escapeHtml(state.user.boundUpiId) : 'Not Linked'}</div>
+              <div style="font-size:11px;color:var(--text-sec);margin-top:2px;">Invite Code: ${escapeHtml(state.user.inviteCode)}</div>
+            </div>
+            <span class="badge" style="background:var(--gold);color:#000;">VIP 1</span>
+          </div>
+        </div>
+        <div class="card">
+          <div style="font-size:12px;color:var(--text-sec);">Wallet Balance</div>
+          <div class="wallet-val" style="margin-bottom:10px;">${formatRs(state.user.walletBalance)}</div>
+          <div class="row-between" style="font-size:12px;">
+            <span>Income: <strong style="color:var(--primary)">${formatRs(state.user.totalIncome)}</strong></span>
+            <span>Recharged: <strong>${formatRs(state.user.totalRecharged)}</strong></span>
+            <span>Withdrawn: <strong style="color:var(--teal)">${formatRs(state.user.totalWithdrawn)}</strong></span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="field">
+            <label>Bind / Change Your Payout UPI ID</label>
+            <input id="myUpiInput" class="input" value="${escapeHtml(state.user.boundUpiId)}" placeholder="e.g. yourname@okaxis">
+          </div>
+          <button class="btn btn-primary" onclick="saveAccountUpi()">Save UPI ID</button>
+        </div>
+        <button class="btn btn-danger" onclick="logoutAccount()">Logout / Switch Account</button>
+      `;
+    }
+  }
+
+  render();
+</script>
+</body>
+</html>
